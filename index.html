@@ -1,115 +1,106 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>CricxCrate – Live Cricket</title>
+<title>CricxCrate – Star Sports HD 1 Live</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.3.5/shaka-player.compiled.js"></script>
 
 <style>
 *{box-sizing:border-box}
-
 body{
   margin:0;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;
-  background:#eef2f7;
+  background:linear-gradient(180deg,#f8fafc,#eef2f7);
   color:#111827;
+  user-select:none;
 }
-
-.main{
-  max-width:420px;
-  margin:0 auto;
+body.popup-active .main-content > :not(.player-wrap){
+  filter:blur(6px);
+  pointer-events:none;
+}
+.glass{
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.45);
+  box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+.top-bar{
+  max-width:950px;
+  margin:14px auto;
   padding:14px;
-}
-
-.card{
-  background:#fff;
-  border-radius:22px;
-  padding:16px;
-  margin-bottom:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-
-.header{
   text-align:center;
   font-weight:600;
-  font-size:16px;
+  border-radius:18px;
 }
-
-.player-card{
-  padding:0;
-  overflow:hidden;
-  background:#000;
-}
-
-/* Updated for Iframe responsiveness */
 .player-wrap{
-  position:relative;
-  aspect-ratio:16/9;
-  width: 100%;
+  max-width:950px;
+  margin:0 auto;
+  background:#000;
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 14px 30px rgba(0,0,0,.15);
+  position: relative;
+  aspect-ratio: 16/9;
 }
-
-.player-wrap iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
+video {
   width: 100%;
   height: 100%;
-  border: none;
+  outline: none;
 }
-
-.section-title{
-  text-align:center;
-  font-weight:600;
-  margin-bottom:12px;
-}
-
-.btn-row,.share-row{
+.section{
+  max-width:950px;
+  margin:14px auto;
+  padding:18px;
+  border-radius:20px;
   display:flex;
-  gap:12px;
+  gap:14px;
   justify-content:center;
+  flex-wrap:wrap;
 }
-
+.section h3{
+  width:100%;
+  text-align:center;
+  margin:0 0 6px;
+  font-size:16px;
+  font-weight:600;
+}
 .btn{
-  flex:1;
-  padding:12px;
+  background:rgba(255,255,255,.9);
+  color:#00a8e1;
+  padding:12px 22px;
   border-radius:16px;
   font-weight:600;
-  border:none;
+  border:1px solid rgba(0,0,0,.08);
   cursor:pointer;
   text-decoration:none;
-  text-align:center;
-  font-size:14px;
-  transition: opacity 0.2s;
+  box-shadow:0 6px 14px rgba(0,0,0,.08);
 }
-
-.btn:active {
-  opacity: 0.8;
-}
-
 .btn.primary{
-  background:#ff6b6b;
+  background:#00a8e1;
   color:#fff;
+  border:none;
 }
-
-.btn.secondary{
-  background:#fff;
-  color:#ff6b6b;
-  border:1px solid #ffd1d1;
+.btn:active,
+.popup-box a:active,
+.popup-box button:active{
+  transform:scale(.96);
 }
-
-.tg-banner{
+.banner{
+  max-width:950px;
+  margin:20px auto;
+  padding:18px;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:12px;
+  font-size:20px;
   font-weight:600;
-  text-decoration:none;
-  color:inherit;
+  border-radius:22px;
 }
-
-.tg-banner img{
-  width:28px;
-}
+.banner img{width:36px}
 
 /* POPUP */
 .popup{
@@ -122,145 +113,127 @@ body{
   justify-content:center;
   z-index:999;
 }
-
 .popup-box{
-  background:rgba(255,255,255,.9);
-  padding:26px 22px;
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(18px);
+  padding:28px 22px;
   border-radius:26px;
   text-align:center;
-  width:90%;
   max-width:340px;
+  width:90%;
+  border:1px solid rgba(255,255,255,.5);
+  box-shadow:0 25px 50px rgba(0,0,0,.2);
 }
-
-.popup-content{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+.popup-box h2{margin:0 0 8px}
+.popup-box p{margin:0 0 18px;color:#6b7280}
+.popup-box a,
+.popup-box button{
+  display:block;
+  width:100%;
+  margin-top:12px;
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  text-decoration:none;
 }
-
-/* TOAST NOTIFICATION */
-#toast {
-  visibility: hidden;
-  min-width: 200px;
-  background-color: #333;
-  color: #fff;
-  text-align: center;
-  border-radius: 50px;
-  padding: 12px;
-  position: fixed;
-  z-index: 1000;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  font-size: 14px;
-}
-
-#toast.show {
-  visibility: visible;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
-@keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-@keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+.popup-join{background:#00a8e1;color:#fff}
+.popup-done{background:rgba(255,255,255,.9);color:#00a8e1}
 </style>
 </head>
 
-<body>
-
-<div id="toast">Link copied! 🏏</div>
+<body oncontextmenu="return false">
 
 <div class="popup" id="popup">
   <div class="popup-box">
     <h2>Welcome 🤩</h2>
     <p>Join Telegram for live match updates</p>
-    <div class="popup-content">
-      <a class="btn primary" href="https://t.me/CricxCrate" target="_blank">Join @CricxCrate</a>
-      <button class="btn secondary" onclick="closePopup()">Already Joined</button>
-    </div>
+    <a class="popup-join" href="Https://t.me/+t991_pRD-zs5NzY1" target="_blank">Join Channel</a>
+    <button class="popup-done" onclick="closePopup()">Already Joined</button>
   </div>
 </div>
 
-<div class="main">
+<div class="main-content">
+  <div class="top-bar glass">CricxCrate • Star Sports HD 1</div>
 
-  <div class="card header">CricxCrate • Star Sports 1HD Hindi</div>
-
-  <div class="card player-card">
-    <div class="player-wrap">
-      <iframe 
-        src="https://cricketstan.github.io/Channel-13" 
-        allow="autoplay; encrypted-media" 
-        allowfullscreen>
-      </iframe>
-    </div>
+  <div class="player-wrap">
+    <video id="video" controls autoplay playsinline></video>
   </div>
 
-  <div class="card">
-    <div class="section-title">⚡️ Join Telegram For Live Updates</div>
-    <div class="btn-row">
-      <a class="btn primary" href="https://t.me/CricxCrate" target="_blank">Join Telegram</a>
-      <a class="btn secondary" href="https://t.me/CricxCratelinks" target="_blank">All Channels</a>
-    </div>
+  <div class="section glass">
+    <h3>⚡ Join Telegram For Live Updates</h3>
+    <a class="btn primary" href="Https://t.me/+t991_pRD-zs5NzY1" target="_blank">Join Telegram</a>
+    <a class="btn" href="https://t.me/CricxCratelinks" target="_blank">All Channels</a>
   </div>
 
-  <div class="card">
-    <div class="section-title">❤️ Share & Support</div>
-    <div class="share-row">
-      <button class="btn primary" onclick="sharePage()">Share</button>
-      <button class="btn secondary" onclick="copyLink()">Copy Link</button>
-    </div>
+  <div class="section glass">
+    <h3>❤️ Share & Support</h3>
+    <button class="btn primary" onclick="sharePage()">Share</button>
+    <button class="btn" onclick="copyLink()">Copy Link</button>
   </div>
 
-  <a href="https://t.me/CricxCrate" target="_blank" class="card tg-banner">
-    <img src="https://telegram.org/img/t_logo.png">
-    Join @CricxCrate
+  <a href="Https://t.me/+t991_pRD-zs5NzY1" target="_blank" style="text-decoration:none;color:inherit">
+    <div class="banner glass">
+      <img src="https://telegram.org/img/t_logo.png">
+      Join Channel
+    </div>
   </a>
-
 </div>
 
 <script>
-/* POPUP LOGIC */
-const popup = document.getElementById("popup");
+/* SHAKA PLAYER LOGIC */
+async function initPlayer() {
+  const video = document.getElementById('video');
+  const player = new shaka.Player(video);
 
-function closePopup(){
-  popup.style.display="none";
-  sessionStorage.setItem("joined","yes");
-}
-
-if(sessionStorage.getItem("joined")==="yes"){
-  popup.style.display="none";
-}
-
-/* SHARE & COPY LOGIC */
-function showToast(msg) {
-  const x = document.getElementById("toast");
-  x.innerHTML = msg;
-  x.className = "show";
-  setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
-}
-
-async function sharePage() {
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        title: 'CricxCrate Live',
-        text: 'Watch Live Cricket on CricxCrate!',
-        url: window.location.href
-      });
-    } catch (err) {
-      console.log("Share failed or cancelled");
+  // Apply New ClearKey DRM
+  player.configure({
+    drm: {
+      clearKeys: {
+        "df20894ec30954d3b28097c138f4cfda": "ff9b6292b1cddbd11a046029cb314634"
+      }
     }
-  } else {
-    copyLink();
+  });
+
+  try {
+    // Load Star Sports MPD Manifest
+    await player.load("https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_1_BTS/output/index.mpd");
+    console.log('Star Sports HD 1 loaded!');
+  } catch (e) {
+    console.error('Error loading stream:', e);
   }
 }
 
-function copyLink() {
-  const url = window.location.href;
-  navigator.clipboard.writeText(url).then(() => {
-    showToast("Link copied to clipboard! 🏏");
-  }).catch(err => {
-    showToast("Failed to copy link.");
-  });
+document.addEventListener('DOMContentLoaded', initPlayer);
+
+/* UI LOGIC */
+const popup = document.getElementById("popup");
+
+function copyLink(){
+  navigator.clipboard.writeText(location.href);
+  alert("Link copied!");
+}
+
+function sharePage(){
+  if(navigator.share){
+    navigator.share({title:"Star Sports HD 1 Live – CricxCrate", url:location.href});
+  }
+}
+
+function closePopup(){
+  popup.style.opacity="0";
+  setTimeout(()=>{
+    popup.style.display="none";
+    document.body.classList.remove("popup-active");
+    sessionStorage.setItem("joined","yes");
+  },300);
+}
+
+if(sessionStorage.getItem("joined")!=="yes"){
+  document.body.classList.add("popup-active");
+}else{
+  popup.style.display="none";
 }
 </script>
 
