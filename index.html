@@ -182,44 +182,68 @@ video {
 </div>
 
 <script>
-/* SHAKA PLAYER LOGIC */
+
+/* SHAKA PLAYER */
 async function initPlayer() {
+
   const video = document.getElementById('video');
   const player = new shaka.Player(video);
 
-  // Apply New ClearKey DRM
   player.configure({
-    drm: {
-      clearKeys: {
-        "400131994b445d8c8817202248760fda",
-          "2d56cb6f07a75b9aff165d534ae2bfc4"
+    drm:{
+      clearKeys:{
+        "400131994b445d8c8817202248760fda":"2d56cb6f07a75b9aff165d534ae2bfc4"
       }
     }
   });
 
-  clearKeys:{
-         
-        }
-      }
-    });
+  try{
 
-    await player.load(
-      "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd"
-
-  try {
-    // Load Star Sports MPD Manifest
     await player.load("https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd");
-    console.log('Star Sports HD 1 loaded!');
-  } catch (e) {
-    console.error('Error loading stream:', e);
+
+    console.log("Stream loaded");
+
+  }catch(e){
+
+    console.error("Error loading stream",e);
+
   }
+
 }
 
-document.addEventListener('DOMContentLoaded', initPlayer);
+/* PAGE READY */
+document.addEventListener("DOMContentLoaded",()=>{
 
-/* UI LOGIC */
-const popup = document.getElementById("popup");
+  initPlayer();
 
+  const popup=document.getElementById("popup");
+
+  if(sessionStorage.getItem("joined")!=="yes"){
+    document.body.classList.add("popup-active");
+  }else{
+    popup.style.display="none";
+  }
+
+});
+
+/* POPUP */
+function closePopup(){
+
+  const popup=document.getElementById("popup");
+
+  popup.style.opacity="0";
+
+  setTimeout(()=>{
+
+    popup.style.display="none";
+    document.body.classList.remove("popup-active");
+    sessionStorage.setItem("joined","yes");
+
+  },300);
+
+}
+
+/* SHARE + COPY */
 function copyLink(){
   navigator.clipboard.writeText(location.href);
   alert("Link copied!");
@@ -227,24 +251,13 @@ function copyLink(){
 
 function sharePage(){
   if(navigator.share){
-    navigator.share({title:"Star Sports HD 1 Live – CricxCrate", url:location.href});
+    navigator.share({
+      title:"Star Sports HD 1 Live – CricxCrate",
+      url:location.href
+    });
   }
 }
 
-function closePopup(){
-  popup.style.opacity="0";
-  setTimeout(()=>{
-    popup.style.display="none";
-    document.body.classList.remove("popup-active");
-    sessionStorage.setItem("joined","yes");
-  },300);
-}
-
-if(sessionStorage.getItem("joined")!=="yes"){
-  document.body.classList.add("popup-active");
-}else{
-  popup.style.display="none";
-}
 </script>
 
 </body>
