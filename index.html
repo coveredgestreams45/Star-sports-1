@@ -191,14 +191,24 @@ async function initPlayer() {
   player.configure({
     drm: {
       clearKeys: {
-        "df20894ec30954d3b28097c138f4cfda": "ff9b6292b1cddbd11a046029cb314634"
+        "400131994b445d8c8817202248760fda",
+          "2d56cb6f07a75b9aff165d534ae2bfc4"
       }
     }
   });
 
+  clearKeys:{
+         
+        }
+      }
+    });
+
+    await player.load(
+      "https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd"
+
   try {
     // Load Star Sports MPD Manifest
-    await player.load("https://jiotvmblive.cdn.jio.com/bpk-tv/Star_Sports_1_BTS/output/index.mpd");
+    await player.load("https://jiotvpllive.cdn.jio.com/bpk-tv/Star_Sports_HD1_Hindi_BTS/output/index.mpd");
     console.log('Star Sports HD 1 loaded!');
   } catch (e) {
     console.error('Error loading stream:', e);
